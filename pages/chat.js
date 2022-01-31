@@ -2,15 +2,31 @@ import { Box, Text, TextField, Image, Button } from '@skynexui/components';
 import React from 'react';
 import appConfig from '../config.json';
 import { createClient } from '@supabase/supabase-js'
+import { useRouter } from 'next/router'
+import { ButtonSendSticker } from '../src/components/SendSticker'
+
+
 
 const SUPABASE_ANON_KEY ='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYW5vbiIsImlhdCI6MTY0MzYzNjg2OSwiZXhwIjoxOTU5MjEyODY5fQ.CpWuWZ1MKLMMHNg8sus6Bb1pRlZNu63yy5C_lQ9fdLs';
 const SUPABASE_URL = 'https://fygyvwtndrhzukindbyg.supabase.co';
 const supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+
+
 export default function ChatPage() {
     // Sua lógica vai aqui
-   
+    const roteamento = useRouter();
+    const usuarioLogado = roteamento.query.username;
+
+    //Use States
     const [mensagem, setMensagem] = React.useState('');
-    const [lista, setListaDeMensagem] = React.useState([]);
+    const [lista, setListaDeMensagem] = React.useState([
+        // {
+        //     id:1,
+        //     usuario:'marcosluan00',
+        //     texto:':sticker: https://www.alura.com.br/imersao-react-4/assets/figurinhas/Figurinha_30.png'
+        // }
+    ]);
     
     React.useEffect(() => {
         supabaseClient.from('mensagens').select('*')
@@ -22,7 +38,7 @@ export default function ChatPage() {
 
     function handleNovaMensagem(novaMensagem){
         const mensagem = {
-            usuario:'marcosluan00',
+            usuario:usuarioLogado,
             texto:novaMensagem,
         }
         supabaseClient.from('mensagens').insert([
@@ -94,6 +110,8 @@ export default function ChatPage() {
                             alignItems: 'center',
                         }}
                     >
+                        
+                        
                         <TextField
                             value={mensagem}
                             onChange={(event)=>{
@@ -116,10 +134,31 @@ export default function ChatPage() {
                                 borderRadius: '5px',
                                 padding: '6px 8px',
                                 backgroundColor: appConfig.theme.colors.neutrals[800],
-                                marginRight: '12px',
+                                marginRight: '8px',
                                 color: appConfig.theme.colors.neutrals[200],
                             }}
                         />
+                        <ButtonSendSticker
+                        onStickerClick={() =>{
+                            
+                        }}
+                        />
+                        <Button 
+                        type="submit"
+                        onClick={(evt) =>{
+                            evt.preventDefault();
+                            handleNovaMensagem(mensagem);
+                        }}
+                        
+                        variant="secondary"
+                        label='ENVIAR'
+                        size='lg'
+                        colorVariant='light'
+                        styleSheet={{
+                            marginBottom: '5px'
+                        }}
+                        />
+                        
                     </Box>
                 </Box>
             </Box>
@@ -205,14 +244,17 @@ function MessageList(props) {
                         {(new Date().toLocaleDateString())}
                     </Text>
                 </Box>
-                <Text
-                        styleSheet={{
-                            fontSize: '18px',
-                        }}
-                    >
-                        {mensagem.texto}
-                    </Text>
-                
+                    {mensagem.texto.startsWith(":sticker:") ? (
+                        <Box styleSheet={{
+                            maxWidth:'15%',
+                            maxHeight:'15%'
+                        }}>
+                        <Image src={mensagem.texto.replace(":sticker:", '')}
+                        />
+                        </Box>
+                    ) : (
+                        mensagem.texto
+                    )}
             </Text>
                 )
             })}    

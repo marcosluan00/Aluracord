@@ -51,9 +51,9 @@ function PaginaInicial() {
             {/* Inicio do Formulário */}
             <Box
               as="form"
-              onSubmit={ function (navegar){
+              onSubmit={(navegar) =>{
                 navegar.preventDefault();
-                roteamento.push('/chat')
+                roteamento.push(`/chat?username=${username}`);
 
               }} 
               styleSheet={{
