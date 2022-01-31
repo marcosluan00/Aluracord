@@ -1,23 +1,42 @@
 import { Box, Text, TextField, Image, Button } from '@skynexui/components';
 import React from 'react';
-
 import appConfig from '../config.json';
+import { createClient } from '@supabase/supabase-js'
 
+const SUPABASE_ANON_KEY ='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYW5vbiIsImlhdCI6MTY0MzYzNjg2OSwiZXhwIjoxOTU5MjEyODY5fQ.CpWuWZ1MKLMMHNg8sus6Bb1pRlZNu63yy5C_lQ9fdLs';
+const SUPABASE_URL = 'https://fygyvwtndrhzukindbyg.supabase.co';
+const supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 export default function ChatPage() {
     // Sua lógica vai aqui
+   
     const [mensagem, setMensagem] = React.useState('');
     const [lista, setListaDeMensagem] = React.useState([]);
+    
+    React.useEffect(() => {
+        supabaseClient.from('mensagens').select('*')
+        .order('id', {ascending: false}).then(({ data }) =>{
+            setListaDeMensagem(data)
+        });
+    }, []);
+    
 
     function handleNovaMensagem(novaMensagem){
         const mensagem = {
-            id:lista.length+1,
             usuario:'marcosluan00',
             texto:novaMensagem,
         }
+        supabaseClient.from('mensagens').insert([
+            mensagem
+        ]).then(( { data })=> {
         setListaDeMensagem([
-            mensagem,
+            data[0],
             ...lista,
         ])
+        })
+        // setListaDeMensagem([
+        //     mensagem,
+        //     ...lista,
+        // ])
         setMensagem('')
     }
     // ./Sua lógica vai aqui
@@ -28,7 +47,8 @@ export default function ChatPage() {
                 backgroundColor: appConfig.theme.colors.primary[500],
                 backgroundImage: `url(https://virtualbackgrounds.site/wp-content/uploads/2020/08/the-matrix-digital-rain.jpg)`,
                 backgroundRepeat: 'no-repeat', backgroundSize: 'cover', backgroundBlendMode: 'multiply',
-                color: appConfig.theme.colors.neutrals['000']
+                color: appConfig.theme.colors.neutrals['000'],
+                
             }}
         >
             <Box
@@ -129,8 +149,8 @@ function MessageList(props) {
     return (
         <Box
             tag="ul"
-            styleSheet={{
-                overflow: 'scroll',
+            styleSheet={{      
+                overflow:'scroll',
                 display: 'flex',
                 flexDirection: 'column-reverse',
                 flex: 1,
@@ -166,7 +186,7 @@ function MessageList(props) {
                             marginRight: '8px',
                             float:'left'
                         }}
-                        src={`https://github.com/vanessametonini.png`}
+                        src={`https://github.com/${mensagem.usuario}.png`}
                     />
                     <Text tag="strong"
 
