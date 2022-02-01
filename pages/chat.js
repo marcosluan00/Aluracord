@@ -6,12 +6,17 @@ import { useRouter } from 'next/router'
 import { ButtonSendSticker } from '../src/components/SendSticker'
 
 
-
+//Dados do supabase
 const SUPABASE_ANON_KEY ='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYW5vbiIsImlhdCI6MTY0MzYzNjg2OSwiZXhwIjoxOTU5MjEyODY5fQ.CpWuWZ1MKLMMHNg8sus6Bb1pRlZNu63yy5C_lQ9fdLs';
 const SUPABASE_URL = 'https://fygyvwtndrhzukindbyg.supabase.co';
 const supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-
+function escutaMensagens(adicionarMensagens){
+    return supabaseClient.from('mensagens')
+    .on('INSERT', (resposta) =>{
+        adicionarMensagens(resposta.new);
+    }).subscribe();
+}
 
 export default function ChatPage() {
     // Sua lógica vai aqui
@@ -33,6 +38,14 @@ export default function ChatPage() {
         .order('id', {ascending: false}).then(({ data }) =>{
             setListaDeMensagem(data)
         });
+        escutaMensagens((novaMensagem)=>{
+            setListaDeMensagem((valorAtualDaLista)=>{
+                return [
+                    novaMensagem, 
+                    ...valorAtualDaLista
+                ]
+            });
+        });
     }, []);
     
 
@@ -43,16 +56,10 @@ export default function ChatPage() {
         }
         supabaseClient.from('mensagens').insert([
             mensagem
-        ]).then(( { data })=> {
-        setListaDeMensagem([
-            data[0],
-            ...lista,
         ])
+        .then(( { data })=> {
+        
         })
-        // setListaDeMensagem([
-        //     mensagem,
-        //     ...lista,
-        // ])
         setMensagem('')
     }
     // ./Sua lógica vai aqui
@@ -139,8 +146,8 @@ export default function ChatPage() {
                             }}
                         />
                         <ButtonSendSticker
-                        onStickerClick={() =>{
-                            
+                        onStickerClick={(sticker) =>{
+                            handleNovaMensagem(':sticker:'+sticker)
                         }}
                         />
                         <Button 
