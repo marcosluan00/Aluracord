@@ -3,6 +3,7 @@ import appConfig from '../config.json';
 import React from 'react'
 import { useRouter } from 'next/router'
 
+
 function Titulo(props) {
     const Tag = props.tag || 'h1';
     return (
@@ -23,13 +24,13 @@ function PaginaInicial() {
   //UseState para alteração do user ao entrar no app - Deixei o username vazio para ser algo generico sem valor inicial
    const [username, setUsername] = React.useState('');
    const roteamento = useRouter();
+  
     return (
       <>
         <Box
           styleSheet={{
             display: 'flex', alignItems: 'center', justifyContent: 'center',
-            backgroundColor: appConfig.theme.colors.primary[500],
-            backgroundImage: 'url(https://virtualbackgrounds.site/wp-content/uploads/2020/08/the-matrix-digital-rain.jpg)',
+            backgroundImage: 'url(https://cdn.pixabay.com/photo/2016/08/27/11/59/pokemon-1624022_960_720.jpg)',
             backgroundRepeat: 'no-repeat', backgroundSize: 'cover', backgroundBlendMode: 'multiply',
           }}
         >
@@ -42,10 +43,10 @@ function PaginaInicial() {
                 xs: 'column',
                 sm: 'row',
               },
-              width: '100%', maxWidth: '700px',
+              width: '100%', maxWidth: '650px',
               borderRadius: '5px', padding: '32px', margin: '16px',
-              boxShadow: '0 2px 10px 0 rgb(0 0 0 / 20%)',
-              backgroundColor: appConfig.theme.colors.neutrals[700],
+              boxShadow: '5px 10px 15px 0 rgba(255, 255, 255, 0.4)',
+              backgroundColor: appConfig.theme.colors.transparent[5]
             }}
           >
             {/* Inicio do Formulário */}
@@ -62,8 +63,8 @@ function PaginaInicial() {
               }}
             >
               <Titulo tag="h2">Boas vindas de volta!</Titulo>
-              <Text variant="body3" styleSheet={{ marginBottom: '32px', color: appConfig.theme.colors.neutrals[300] }}>
-                {appConfig.name} - {`${console.log('api.github.com/user/'+username)} `}
+              <Text variant="body2" styleSheet={{ marginTop: '5px',marginBottom: '32px', color: appConfig.theme.colors.neutrals[100] }}>
+                {appConfig.name} - Use seu github
               </Text>
   
               <TextField
@@ -74,12 +75,16 @@ function PaginaInicial() {
                   const valor = event.target.value;
                   setUsername(valor);
                 }}
+                styleSheet={{
+                  fontSize: '25px'
+                }}
                 textFieldColors={{
+                  
                   neutral: {
-                    textColor: appConfig.theme.colors.neutrals[200],
-                    mainColor: appConfig.theme.colors.neutrals[900],
-                    mainColorHighlight: appConfig.theme.colors.primary[500],
-                    backgroundColor: appConfig.theme.colors.neutrals[800],
+                    textColor: appConfig.theme.colors.neutrals[100],
+                    mainColor: appConfig.theme.colors.neutrals[500],
+                    mainColorHighlight: appConfig.theme.colors.neutrals[999],
+                    backgroundColor: appConfig.theme.colors.transparent[4],
                   },
                 }}
               />
@@ -87,11 +92,12 @@ function PaginaInicial() {
                 type='submit'               
                 label='Entrar'
                 fullWidth
+                size='xl'
                 buttonColors={{
-                  contrastColor: appConfig.theme.colors.neutrals["000"],
-                  mainColor: appConfig.theme.colors.primary[500],
-                  mainColorLight: appConfig.theme.colors.primary[400],
-                  mainColorStrong: appConfig.theme.colors.primary[600],
+                  contrastColor: appConfig.theme.colors.neutrals[999],
+                  mainColor: appConfig.theme.colors.primary["000"],
+                  mainColorLight: appConfig.theme.colors.primary["050"],
+                  mainColorStrong: appConfig.theme.colors.primary[100],
                 }}
               />
             </Box>
@@ -106,31 +112,29 @@ function PaginaInicial() {
                 alignItems: 'center',
                 maxWidth: '200px',
                 padding: '16px',
-                backgroundColor: appConfig.theme.colors.neutrals[800],
-                border: '1px solid',
-                borderColor: appConfig.theme.colors.neutrals[999],
                 borderRadius: '10px',
                 flex: 1,
-                minHeight: '240px',
+                minHeight: '200px',
               }}
             >
               <Image
                 styleSheet={{
                   borderRadius: '50%',
-                  marginBottom: '16px',
+                  marginBottom: '20px',
                 }}
                 src={`https://github.com/${username}.png`}
               />
               <Text
                 variant="body4"
                 styleSheet={{
-                  color: appConfig.theme.colors.neutrals[200],
-                  backgroundColor: appConfig.theme.colors.neutrals[900],
+                  fontSize: '30px',
+                  color: appConfig.theme.colors.neutrals[100],
                   padding: '3px 10px',
-                  borderRadius: '1000px'
+                  fontWeight: 'bold'
                 }}
               >
                 {username}
+                
               </Text>
             </Box>
             {/* Photo Area */}
